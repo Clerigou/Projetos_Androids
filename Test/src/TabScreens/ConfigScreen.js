@@ -1,15 +1,17 @@
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { View, Text,TouchableOpacity, TextInput, Alert} from 'react-native';
 import FontAwesome5Brands from 'react-native-vector-icons/FontAwesome5'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { ConfigStyle } from '../Styles/ConfigStyle';
 
 
+
+
+
 export default function Config({ navigation }){
 
 
-   
 
     const [day, setDay] = useState('')
     const [month, setMonth] = useState('')
@@ -21,14 +23,11 @@ export default function Config({ navigation }){
     let atualmonth = today.getMonth()
     let atualyear = today.getFullYear()
 
-    function submit1() {
+    const submit1 = () => {
        if(day == atualday && month == atualmonth && year == atualyear) {
-            try{
-                navigation.navigate('Segunda_tela')
-            }
-            catch (error) {
-                console.log(error);
-            }
+                return (  navigation.navigate('Segunda_Tela') )
+               
+           
             
         } else {
             return(

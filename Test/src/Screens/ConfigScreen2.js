@@ -1,37 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { View, Text, TouchableOpacity, TextInput, SafeAreaView, Alert} from 'react-native';
 import FontAwesome5Brands from 'react-native-vector-icons/FontAwesome5'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import SQLite from 'react-native-sqlite-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { ConfigStyle } from '../Styles/ConfigStyle';
 
-const db = SQLite.openDatabase(
-    {
-        name:'MainDB',
-        location: 'default',
-    },
-    () => {},
-    error => {console.log(error)}
-);
 
 
 
 export function ConfigScreen2({ navigation }) {
     
-    useEffect(() => {
-        createTable();
-    }, []);
 
-    const createTable = () => {
-        db.transaction((tx) =>{
-            tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS"
-                +"User " 
-                +"(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Day INTEGER, Month INTEGER, Year INTEGER, Color TEXT);"
-            )
-        })
-    }  
     const[name, setName] = useState('')
 
     const today = new Date()
@@ -127,14 +108,18 @@ export function ConfigScreen2({ navigation }) {
         } 
         else {
             try {
-                 await db.transaction( async (tx) => {
-                    await tx.executeSql( 
-                        "UPDATE User SET Name='"+name+"', Day="+ day+", Month="+ month +", Year="+ year+", Color ='"+ color +"'"
-                       
-                    )
-                })
-                navigation.navigate('terceira_tela');
-            } catch (error) {
+                    var User = {
+                        Name: name,
+                        Day: day,
+                        Month: month,
+                        Year: year,
+                        Color: color
+                    }
+                  await AsyncStorage.setItem('UserData', JSON.stringify(User))
+                  
+                  navigation.navigate('terceira_tela');
+                }  
+             catch (error) {
                 console.log(error);
             }
         }

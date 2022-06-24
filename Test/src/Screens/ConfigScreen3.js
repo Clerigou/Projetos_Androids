@@ -1,18 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 import FontAwesome5Brands from 'react-native-vector-icons/FontAwesome5'
-import SQLite from 'react-native-sqlite-storage';
 import moment from 'moment';
 import { ConfigStyle } from '../Styles/ConfigStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const db = SQLite.openDatabase(
-    {
-        name:'MainDB',
-        location: 'default',
-    },
-    () => { },
-    error => {console.log(error)}
-);
 
 
 export default function ConfigScreen3 ({ navigation }) {
@@ -35,28 +27,22 @@ export default function ConfigScreen3 ({ navigation }) {
 
     const getData = () => {
         try {
-            db.transaction( (tx) => {
-                tx.executeSql(
-                    "SELECT * FROM User ",
-                    [],
-                    (tx, results) => {
-                        var len = results.rows.length;
-                        if(len > 0) {
-                            var userName = results.rows.item(0).Name;
-                            var userDay = results.rows.item(0).Day;
-                            var userMonth = results.rows.item(0).Month;
-                            var userYear = results.rows.item(0).Year;
-                            var userColor = results.rows.item(0).Color;
-                            setName(userName);
-                            setDay(userDay);
-                            setMonth(userMonth);
-                            setYear(userYear);
-                            setColor(userColor);
-                        }
-                    }
-                )
-            })
-        } catch (error) {
+            AsyncStorage.getItem('UserData')
+                .then(value => {
+                    if (value != null){
+                        let user = JSON.parse(value);
+                        setName(user.Name);
+                        setDay(user.Day);
+                        setMonth(user.Month);
+                        setYear(user.Year);
+                        setColor(user.Color);
+                     }
+                    }) 
+        }
+        
+             
+            
+        catch (error) {
             console.log(error);
         }
     }

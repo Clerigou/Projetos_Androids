@@ -11,3 +11,5 @@
 
 -keep class org.sqlite.** { *; }
 -keep class org.sqlite.database.** { *; }
+-keep class com.db.zaiteteste.**
+-keepclassmembers class com.db.zaiteteste.** { *; }
